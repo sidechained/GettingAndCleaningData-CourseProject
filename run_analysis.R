@@ -40,3 +40,27 @@ features <- read.csv("../UCI HAR Dataset Merged/features.csv", header = FALSE)
 X <- read.csv("../UCI HAR Dataset Merged/test_train/X_test_train.csv", header = FALSE)
 subject <- read.csv("../UCI HAR Dataset Merged/test_train/subject_test_train.csv", header = FALSE)
 y <- read.csv("../UCI HAR Dataset Merged/test_train/y_test_train.csv", header = FALSE)
+
+# Extract only the measurements on the mean and standard deviation for each measurement
+# NOTE: the X frame (features) as the master data frame, and add columns to that
+
+library("dplyr") # required for 'select'
+## TODO: double check there are no names that do not grep properly
+feature_indices_to_keep <- grep("mean|std", features[,2]) # operates on 2nd column of 'features' (i.e. the feature names)
+feature_labels_to_keep <- grep("mean|std", features[,2], value = TRUE) # operates on 2nd column of 'features' (i.e. the feature names)
+master_frame <- select(X, all_of(feature_indices_to_keep))
+# Note: Using an external vector in selections is ambiguous. see https://tidyselect.r-lib.org/reference/faq-external-vector.html
+names(master_frame) <- feature_labels_to_keep
+
+# add column of person indices
+library("tibble") # required for 'add column' function
+master_frame <- add_column(master_frame, subject, .before = 1) # add as first column
+names(master_frame)[1] <- ("personindex")
+
+# add column of activities names (names looked up from 'activity_labels.csv')
+master_frame <- add_column(master_frame, y, .before = 1) # operates on 2nd column of 'y' (i.e. the activity names)
+master_frame[,1] <- sapply(master_frame[,1], function(x) { activity_labels$V2[x] })
+names(master_frame)[1] <- ("activityname")
+
+# Appropriately labels the data set with descriptive variable names
+names(master_frame) <- tolower(gsub("[^[:alnum:] ]", "", names(master_frame)))

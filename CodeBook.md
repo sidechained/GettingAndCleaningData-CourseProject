@@ -23,10 +23,10 @@ In this section of the script, the relevant ".csv" files are read back into the 
 # 3. Dataset 1: Extraction of only mean and standard deviation features
 
 In this section:
-- a subset of X is created which retains only the columns which contain 'mean' or 'std' within their names (81 features)
+- a subset of X is created which retains only the columns that contain 'mean' or 'std' within their names (81 features)
 - a column of subject indices (subject) is added as the first column in the data frame and is given the name 'personindex'
-- a column of activity indices (y) is added as the second column in the data frame, then
-    - the activities indices are replaced with the strings contained  in the 'activity-labels' lookup table
+- a column of activity indices (y) is added as the second column in the data frame, then:
+    - the activities indices are replaced with the strings contained in the 'activity-labels' lookup table
     - the column is given the name 'activityname'
 - the names of all columns are converted to lower case and stripped of all but alphanumeric characters
 
@@ -35,10 +35,10 @@ The final tidied dataset (1) can be found within the 'master_frame' environment 
 # 4. Dataset 2: Calculation of averages for each feature measurement (grouped by activity and person/subject)
 
 In this section, the tidy data set from 3 is:
-- subset and grouped by person index (removing the activity name column) and the mean averages of all features are calculated for each person.
-- subset and grouped by activity name (removing the person index column) and the mean averages of all features are calculated for each activity.
+- subset and grouped by person index (removing the activity name column) and the mean averages of all features are calculated for each person
+- subset and grouped by activity name (removing the person index column) and the mean averages of all features are calculated for each activity
 
-Feature columns in both new data frames are appended with '-avg' in their names.
+All feature columns in both new data frames are appended with '-avg' in their names.
 
 The final tidied dataset (2) can be found within the 'subject_averages' and 'activity_averages' environment variables
 

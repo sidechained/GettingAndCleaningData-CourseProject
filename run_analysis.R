@@ -1,4 +1,4 @@
-# Merge the training and the test sets to create one data set.
+# 1. Merging and writing
 
 if (file.exists("../UCI HAR Dataset Merged")) { stop("'../UCI HAR Dataset Merged' directory already exists, please delete manually") }
 
@@ -6,13 +6,13 @@ dir.create("../UCI HAR Dataset Merged")
 dir.create("../UCI HAR Dataset Merged/test_train")
 dir.create("../UCI HAR Dataset Merged/test_train/Inertial Signals")
 
-# read in required top level files that don't need to be merged, then write out to new folder as .csv
+## read in required top level files that don't need to be merged, then write out to new folder as .csv
 features_file <- read.delim("../UCI HAR Dataset/features.txt", header = FALSE, sep=" ")
 write.table(features_file, "../UCI HAR Dataset Merged/features.csv", row.names = FALSE, col.names = FALSE, sep=",")
 activity_labels_file <- read.delim("../UCI HAR Dataset/activity_labels.txt", header = FALSE, sep=" ")
 write.table(activity_labels_file, "../UCI HAR Dataset Merged/activity_labels.csv", row.names = FALSE, col.names = FALSE, sep=",")
 
-# generalised function for merging and writing test and train files as .csv
+## generalised function for merging and writing test and train files as .csv
 merge_write <- function(base_path, file_name, separator) {
   test <- read.delim(paste0(base_path, "/test/", file_name, "_test.txt"), header = FALSE, sep=separator)
   train <- read.delim(paste0(base_path, "/train/", file_name, "_train.txt"), header = FALSE, sep=separator)
@@ -33,7 +33,7 @@ merge_write("../UCI HAR Dataset", "Inertial Signals/body_acc_z", "")
 merge_write("../UCI HAR Dataset", "Inertial Signals/body_gyro_z", "")
 merge_write("../UCI HAR Dataset", "Inertial Signals/total_acc_z", "")
 
-# re-read in merged files (only the ones we need for our tidy sets)
+# 2. Re-reading merged files (only the ones we need for our tidy sets)
 
 activity_labels <- read.csv("../UCI HAR Dataset Merged/activity_labels.csv", header = FALSE)
 features <- read.csv("../UCI HAR Dataset Merged/features.csv", header = FALSE)
@@ -41,8 +41,8 @@ X <- read.csv("../UCI HAR Dataset Merged/test_train/X_test_train.csv", header = 
 subject <- read.csv("../UCI HAR Dataset Merged/test_train/subject_test_train.csv", header = FALSE)
 y <- read.csv("../UCI HAR Dataset Merged/test_train/y_test_train.csv", header = FALSE)
 
-# Extract only the measurements on the mean and standard deviation for each measurement
-# NOTE: the X frame (features) as the master data frame, and add columns to that
+# 3. Extract only the features representing mean and standard deviation
+## X frame (features) as the master data frame, and add columns to that
 
 library("dplyr") # required for 'select'
 ## TODO: double check there are no names that do not grep properly
@@ -58,9 +58,19 @@ master_frame <- add_column(master_frame, subject, .before = 1) # add as first co
 names(master_frame)[1] <- ("personindex")
 
 # add column of activities names (names looked up from 'activity_labels.csv')
-master_frame <- add_column(master_frame, y, .before = 1) # operates on 2nd column of 'y' (i.e. the activity names)
-master_frame[,1] <- sapply(master_frame[,1], function(x) { activity_labels$V2[x] })
-names(master_frame)[1] <- ("activityname")
+master_frame <- add_column(master_frame, y, .before = 2)
+master_frame[,1] <- sapply(master_frame[,1], function(x) { activity_labels$V2[x] }) # V2 operates on 2nd column of 'y' (i.e. the activity names)
+names(master_frame)[2] <- ("activityname")
 
 # Appropriately labels the data set with descriptive variable names
 names(master_frame) <- tolower(gsub("[^[:alnum:] ]", "", names(master_frame)))
+
+# creates a second, independent tidy data set with the average of each variable for each activity and each subject
+master_frame_averages <- master_frame
+
+# the average of each variable (i.e. the features)
+# - for each activity
+# - for each subject
+
+subject_averages <- master_frame %>% select(-activityname) %>% group_by(personindex) %>% summarise_all(mean) %>% rename_with(function(x) {paste0(x, "-avg")})
+activity_averages <- master_frame %>% select(-personindex) %>% group_by(activityname) %>% summarise_all(mean) %>% rename_with(function(x) {paste0(x, "-avg")})

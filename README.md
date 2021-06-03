@@ -1,6 +1,6 @@
 # Introduction
 
-The purpose of this repo is to merge and tidy data during the "Human Activity Recognition Using Smartphones" project to produce two new datasets, as follows:
+The purpose of this repo is to merge and tidy the data collected during the "Human Activity Recognition Using Smartphones" project, producing two new datasets as follows:
 
 - tidy dataset 1: extracted measurements regarding mean and standard deviations
 - tidy dataset 2: averages of the measurements in dataset 1, grouped by activity name and subject ID

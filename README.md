@@ -23,6 +23,6 @@ The resulting datasets described above can then be found as environment variable
 - tidy dataset 1 is found within the 'master_frame' environment variable and contains extracted feature measurements relating to mean and standard deviations
 - tidy dataset 2 is found within the 'subject_averages' and 'activity_averages' environment variables, which contain averages of the measurements from dataset 1, organised respectively by activity name and subject ID
 
-# Further Information
+# Further Information
 
 For more details of the tidying and analysis procedure please see the [codebook](CodeBook.md)

@@ -41,7 +41,7 @@ X <- read.csv("UCI HAR Dataset Merged/test_train/X_test_train.csv", header = FAL
 subject <- read.csv("UCI HAR Dataset Merged/test_train/subject_test_train.csv", header = FALSE)
 y <- read.csv("UCI HAR Dataset Merged/test_train/y_test_train.csv", header = FALSE)
 
-# 3. Extract only the features representing mean and standard deviation
+# 3. Extracting only the features representing mean and standard deviation
 ## treats X frame (features) as the master data frame, and adds columns to that
 
 library("dplyr")
@@ -63,6 +63,6 @@ names(master_frame)[2] <- ("activityname")
 # Appropriately labels the data set with descriptive variable names
 names(master_frame) <- tolower(gsub("[^[:alnum:] ]", "", names(master_frame)))
 
-# now create a second, independent tidy data set with the average of each variable for each activity and each subject
+# 4. Calculation of averages for each feature measurement (grouped by activity name and person index)
 averages <- master_frame %>% group_by(personindex, activityname) %>% summarise_all(mean) %>% rename_with(function(x) {paste0(x, "-avg")}, -1:-2)
-write.table(averages, "UCI-HAR_tidyData.txt", row.name=FALSE)
+write.table(averages, "UCI-HAR_tidyData.txt", row.name=FALSE) # writing to file

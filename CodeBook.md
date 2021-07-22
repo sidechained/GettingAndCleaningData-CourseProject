@@ -20,7 +20,7 @@ In this section of the script, the relevant ".csv" files are read back into the 
 - _y_               : a two-column data frame of indices representing the type of activity performed [integers from 1 to 6]
 - _activity_labels_ : a two-column data frame representing a lookup table, which contains the names of the activities corresponding to the indices in 'y' (strings such as 'SITTING' or 'WALKING')
 
-# 3. Dataset 1: Extraction of only mean and standard deviation features
+# 3. Extraction of only mean and standard deviation features
 
 In this section:
 - a subset of X is created which retains only the columns that contain 'mean' or 'std' within their names (81 features)
@@ -28,19 +28,13 @@ In this section:
 - a column of activity indices (y) is added as the second column in the data frame, then:
     - the activities indices are replaced with the strings contained in the 'activity-labels' lookup table
     - the column is given the name 'activityname'
-- the names of all columns are converted to lower case and stripped of all but alphanumeric characters
+- the names of all columns are converted to lower case and stripped of all but alphanumeric characters (as per r convention)
 
-The final tidied dataset (1) can be found within the 'master_frame' environment variable
+This dataset is not written to a file, but can be found within the 'master_frame' environment variable
 
-# 4. Dataset 2: Calculation of averages for each feature measurement (grouped by activity and person/subject)
+# 4. Calculation of averages for each feature measurement (grouped by activity name and person index)
 
-In this section, the tidy data set from 3 is:
-- subset and grouped by person index (removing the activity name column) and the mean averages of all features are calculated for each person
-- subset and grouped by activity name (removing the person index column) and the mean averages of all features are calculated for each activity
-
-All feature columns in both new data frames are appended with '-avg' in their names.
-
-The final tidied dataset (2) can be found within the 'subject_averages' and 'activity_averages' environment variables
+In this section, the tidy data set from part 3 is subset and grouped by person index and activity name, before calculating the mean averages for all features. In addition, all feature columns in both new data frame are appended with '-avg' in their names. The final tidied dataset is written to the file "UCI-HAR_tidyData.txt" in the root repo directory.
 
 # Further Information
 

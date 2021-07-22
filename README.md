@@ -15,7 +15,7 @@ Installation should proceed as follows:
 2. Navigate into the "GettingAndCleaningData-CourseProject" folder, then download the original dataset into it from [here](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). Unzip this file in place. You should now have a folder within the "GettingAndCleaningData-CourseProject" repo folder called "UCI HAR Dataset".
 3. Now run the "run_analysis.R" file in one of two ways:
 - using `r shell`, then `source("run_analysis.R")`
-- in RStudio, ensuring the working directory is set to the "GettingAndCleaningData-CourseProject" repo folder (using setwd).
+- using RStudio, ensuring the working directory is set to the "GettingAndCleaningData-CourseProject" repo folder (i.e. using setwd).
 
 # Further Information
 

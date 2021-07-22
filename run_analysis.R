@@ -42,14 +42,12 @@ subject <- read.csv("UCI HAR Dataset Merged/test_train/subject_test_train.csv", 
 y <- read.csv("UCI HAR Dataset Merged/test_train/y_test_train.csv", header = FALSE)
 
 # 3. Extract only the features representing mean and standard deviation
-## X frame (features) as the master data frame, and add columns to that
+## treats X frame (features) as the master data frame, and adds columns to that
 
-library("dplyr") # required for 'select'
-## TODO: double check there are no names that do not grep properly
+library("dplyr")
 feature_indices_to_keep <- grep("mean|std", features[,2]) # operates on 2nd column of 'features' (i.e. the feature names)
-feature_labels_to_keep <- grep("mean|std", features[,2], value = TRUE) # operates on 2nd column of 'features' (i.e. the feature names)
+feature_labels_to_keep <- grep("mean|std", features[,2], value = TRUE)
 master_frame <- select(X, all_of(feature_indices_to_keep))
-# Note: Using an external vector in selections is ambiguous. see https://tidyselect.r-lib.org/reference/faq-external-vector.html
 names(master_frame) <- feature_labels_to_keep
 
 # add column of person indices
@@ -65,8 +63,6 @@ names(master_frame)[2] <- ("activityname")
 # Appropriately labels the data set with descriptive variable names
 names(master_frame) <- tolower(gsub("[^[:alnum:] ]", "", names(master_frame)))
 
-# creates a second, independent tidy data set with the average of each variable for each activity and each subject
-# the average of each variable (i.e. the features)
-# - for each activity AND each subject
+# now create a second, independent tidy data set with the average of each variable for each activity and each subject
 averages <- master_frame %>% group_by(personindex, activityname) %>% summarise_all(mean) %>% rename_with(function(x) {paste0(x, "-avg")}, -1:-2)
 write.table(averages, "UCI-HAR_tidyData.txt", row.name=FALSE)
